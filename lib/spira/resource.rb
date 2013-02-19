@@ -43,13 +43,14 @@ module Spira
     def type(uri = nil)
       if uri
         if uri.is_a?(RDF::URI)
-          ts = @types ? types : Set.new
+          ts = @types ? types : []
+          ts << uri unless ts.include?(uri)
           singleton_class.class_eval do
             define_method :types do
               ts
             end
           end
-          @types = ts << uri
+          @types = ts
         else
           raise TypeError, "Type must be a RDF::URI"
         end

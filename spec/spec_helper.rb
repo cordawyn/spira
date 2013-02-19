@@ -6,3 +6,5 @@ require 'rdf/isomorphic'
 def fixture(filename)
   File.join(File.dirname(__FILE__),'fixtures', filename)
 end
+
+Spira.add_repository!(:default, RDF::Repository)
