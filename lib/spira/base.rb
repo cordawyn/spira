@@ -35,7 +35,7 @@ module Spira
       attr_reader :reflections, :properties
 
       def types
-        Set.new
+        []
       end
 
       ##

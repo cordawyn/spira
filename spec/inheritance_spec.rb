@@ -142,7 +142,7 @@ describe Spira do
     end
 
     it "should have multiple types" do
-      types = Set.new [RDF::SIOC.item, RDF::SIOC.post]
+      types = [RDF::SIOC.item, RDF::SIOC.post]
       MultiTypeThing.types.should eql types
     end
 
@@ -151,7 +151,7 @@ describe Spira do
     end
 
     it "should overwrite types" do
-      types = Set.new << RDF::SIOC.container
+      types = [RDF::SIOC.container]
       InheritedWithTypesMultiTypeThing.types.should eql types
     end
 
