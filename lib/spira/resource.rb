@@ -105,6 +105,14 @@ module Spira
     #
     # @see Spira::Base::DSL#property
     def has_many(name, opts = {})
+
+      if opts.delete(:localized)
+        raise 'Only Spira::Types::Any properties can accept the :localized option' unless type_for(opts[:type]) == Spira::Types::Any
+        define_localized_property_methods(name, opts)
+        name = "#{name}_native"
+        opts[:type] = Spira::Types::Native
+      end
+
       property(name, opts)
 
       reflections[name] = AssociationReflection.new(:has_many, name, opts)
@@ -119,8 +127,33 @@ module Spira
       end
     end
 
-
     private
+
+    ##
+    # Create the localized specific getter/setter for a given property
+    #
+    # @private
+    def define_localized_property_methods(name, opts)
+      define_method "#{name}=" do |arg|
+        new_value = merge_localized_property(name, arg)
+        write_attribute "#{name}_native", new_value
+      end
+
+      define_method name do
+        value = read_attribute("#{name}_native")
+        unserialize_localized_properties(value, I18n.locale)
+      end
+
+      define_method "#{name}_with_locales" do
+        value = read_attribute("#{name}_native")
+        hash_localized_properties(value)
+      end
+
+      define_method "#{name}_with_locales=" do |arg|
+        value = serialize_hash_localized_properties(arg)
+        write_attribute "#{name}_native", value
+      end
+    end
 
     ##
     # Determine the predicate for a property based on the given predicate, name, and default vocabulary
