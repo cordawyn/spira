@@ -20,7 +20,7 @@ module Spira::Types
     def self.serialize(value)
       if value
         RDF::Literal.new(true, :datatype => XSD.boolean)
-      else 
+      else
         RDF::Literal.new(false, :datatype => XSD.boolean)
       end
     end
